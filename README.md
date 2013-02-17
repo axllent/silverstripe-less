@@ -1,13 +1,12 @@
-#silverstripe-less
+#LESS CSS Module for SilverStripe
 
+Simple wrapper for [lessphp](http://leafo.net/lessphp/) to integrate [LESS](http://lesscss.org/) in SilverStripe.
+
+## Features
 * Uses lessphp http://leafo.net/lessphp/
 * Based on lesscss from https://github.com/tardinha/silverstripe-lesscss
 * Includes flushing option (?flush=1) to regenerate CSS stylesheets
 (ie. force undetected less changes with @import)
-
-##LESS CSS Module for SilverStripe
-
-Simple wrapper for [lessphp](http://leafo.net/lessphp/) to integrate [LESS](http://lesscss.org/) in SilverStripe.
 
 ## Requirements
 
