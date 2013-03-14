@@ -56,12 +56,12 @@ class Page_Controller extends ContentController {
 
 	public function init() {
 		parent::init();
+		/* The parser will find css/stylesheet[1-3].less files are parse those before combining */
 		$css[] = $this-&gt;ThemeDir() . '/css/stylesheet1.css';
 		$css[] = $this-&gt;ThemeDir() . '/css/stylesheet2.css';
 		$css[] = $this-&gt;ThemeDir() . '/css/stylesheet3.css';
-		Requirements::combine_files('combined.css',$css);
+		Requirements::combine_files('combined.css', $css);
 		Requirements::process_combined_files();
-		/* The parser will find css/stylesheet[1-3].less files are parse those before combiming */
 	}
 
 }
