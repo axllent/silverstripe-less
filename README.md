@@ -7,7 +7,7 @@ Simple wrapper for [lessphp](http://leafo.net/lessphp/) to integrate [LESS](http
 * Based on lesscss from https://github.com/tardinha/silverstripe-lesscss
 * Includes flushing option (?flush=1) to regenerate CSS stylesheets
 (ie. force undetected less changes with @import)
-* Check all required *.css files for a *.less equevelant, so works transparently.
+* Check all required *.css files for a *.less equivalent, so works transparently.
 
 ## Requirements
 
