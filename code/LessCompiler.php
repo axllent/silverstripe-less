@@ -23,10 +23,13 @@ class LessCompiler extends Requirements_Backend {
 		}
 		if (preg_match('/\.less$/i', $file)) {
 			$out = preg_replace('/\.less$/i', '.css', $file);
-			if(isset($_GET['flush']) && Permission::check('CMS_ACCESS_CMSMain')) {
+			if(isset($_GET['flush']) && Permission::check('CMS_ACCESS_CMSMain'))
 				@unlink(Director::getAbsFile($out));
-			}
-			lessc::ccompile(Director::getAbsFile($file), Director::getAbsFile($out));
+			$less = new lessc;
+			if (DIRECTOR::isLive())
+				$less->setFormatter("compressed");
+			$less->checkedCompile(Director::getAbsFile($file), Director::getAbsFile($out));
+
 			$file = $out;
 		}
 		return parent::css($file, $media);
