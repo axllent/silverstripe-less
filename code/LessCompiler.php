@@ -29,15 +29,17 @@ class LessCompiler extends Requirements_Backend {
 			$out = preg_replace('/\.less$/i', '.css', $file);
 
 			/* Force recompile if ?flush */
-			if(isset($_GET['flush']))
+			if(isset($_GET['flush'])) {
 				$compiler = 'compileFile';
+			}
 
 			/* Create instance */
 			$less = new lessc;
 
 			/* Automatically compress if in live mode */
-			if (DIRECTOR::isLive())
+			if (DIRECTOR::isLive()) {
 				$less->setFormatter("compressed");
+			}
 
 			try {
 				$less->$compiler(Director::getAbsFile($file), Director::getAbsFile($out));
@@ -48,7 +50,7 @@ class LessCompiler extends Requirements_Backend {
 			$file = $out;
 		}
 
-		/* Return css file */
+		/* Return css path */
 		return parent::css($file, $media);
 	}
 
