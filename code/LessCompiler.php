@@ -22,24 +22,32 @@ class LessCompiler extends Requirements_Backend {
 				$file = $less;
 			}
 		}
-		/* If less file check / compile it and save to css */
+
+		/* If less file, then check/compile it */
 		if (preg_match('/\.less$/i', $file)) {
 			$compiler = 'checkedCompile';
 			$out = preg_replace('/\.less$/i', '.css', $file);
+
 			/* Force recompile if ?flush */
 			if(isset($_GET['flush']))
 				$compiler = 'compileFile';
+
+			/* Create instance */
 			$less = new lessc;
+
 			/* Automatically compress if in live mode */
 			if (DIRECTOR::isLive())
 				$less->setFormatter("compressed");
+
 			try {
 				$less->$compiler(Director::getAbsFile($file), Director::getAbsFile($out));
 			} catch (Exception $ex) {
 				trigger_error("lessphp fatal error: " . $ex->getMessage(), E_USER_ERROR);
 			}
+
 			$file = $out;
 		}
+
 		/* Return css file */
 		return parent::css($file, $media);
 	}
