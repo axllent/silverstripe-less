@@ -15,39 +15,57 @@ class LessCompiler extends Requirements_Backend {
 
 	function css($file, $media = null) {
 
-		/* If file is CSS, check if there is a LESS file */
-		if (preg_match('/\.css$/i', $file)) {
-			$less = preg_replace('/\.css$/i', '.less', $file);
-			if (is_file(Director::getAbsFile($less))) {
-				$file = $less;
-			}
-		}
+		/*
+		 * Only initiate automatically if:
+		 * - webiste is in dev mode
+		 * - or a ?flush is called
+		 */
+		if (Director::isDev() || isset($_GET['flush'])) {
 
-		/* If less file, then check/compile it */
-		if (preg_match('/\.less$/i', $file)) {
-			$compiler = 'checkedCompile';
-			$out = preg_replace('/\.less$/i', '.css', $file);
-
-			/* Force recompile if ?flush */
-			if(isset($_GET['flush'])) {
-				$compiler = 'compileFile';
+			/* If file is CSS, check if there is a LESS file */
+			if (preg_match('/\.css$/i', $file)) {
+				$less = preg_replace('/\.css$/i', '.less', $file);
+				if (is_file(Director::getAbsFile($less))) {
+					$file = $less;
+				}
 			}
 
-			/* Create instance */
-			$less = new lessc;
+			/* If less file, then check/compile it */
+			if (preg_match('/\.less$/i', $file)) {
 
-			/* Automatically compress if in live mode */
-			if (DIRECTOR::isLive()) {
-				$less->setFormatter("compressed");
+				$out = preg_replace('/\.less$/i', '.css', $file);
+
+				$css_file = Director::getAbsFile($out);
+
+				/* Force recompile if ?flush */
+				if (isset($_GET['flush'])) {
+					$compiler = 'compileFile';
+				}
+
+				/* Create instance */
+				$less = new lessc;
+
+				/* Automatically compress if in live mode */
+				if (Director::isLive()) {
+					$less->setFormatter("compressed");
+				}
+
+				try {
+					/* Force recompile & only write to css if updated */
+					if (isset($_GET['flush'])) {
+						$compiled = $less->compileFile(Director::getAbsFile($file));
+						if (!is_file($css_file) || md5_file($css_file) != md5($compiled))
+							file_put_contents($css_file, $compiled);
+					} else {
+						$less->checkedCompile(Director::getAbsFile($file), $css_file);
+					}
+				} catch (Exception $ex) {
+					trigger_error("lessphp fatal error: " . $ex->getMessage(), E_USER_ERROR);
+				}
+
+				$file = $out;
 			}
 
-			try {
-				$less->$compiler(Director::getAbsFile($file), Director::getAbsFile($out));
-			} catch (Exception $ex) {
-				trigger_error("lessphp fatal error: " . $ex->getMessage(), E_USER_ERROR);
-			}
-
-			$file = $out;
 		}
 
 		/* Return css path */
