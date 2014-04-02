@@ -20,7 +20,7 @@ class LessCompiler extends Requirements_Backend {
 		 * - webiste is in dev mode
 		 * - or a ?flush is called
 		 */
-		if (Director::isDev() || isset($_GET['flush'])) {
+		if (preg_match('/\.less$/i', $file) || Director::isDev() || isset($_GET['flush'])) {
 
 			/* If file is CSS, check if there is a LESS file */
 			if (preg_match('/\.css$/i', $file)) {
