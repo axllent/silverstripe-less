@@ -13,6 +13,17 @@
 
 class LessCompiler extends Requirements_Backend {
 
+	protected static $variables = array();
+
+	/*
+	 * Allow manually adding variables
+	 * Automatically quotes string for LESS parsing
+	 * @param $key String, $value String
+	 */
+	public static function addVariable($key, $value) {
+		self::$variables[$key] = $value;
+	}
+
 	function css($file, $media = null) {
 
 		/*
@@ -44,6 +55,10 @@ class LessCompiler extends Requirements_Backend {
 
 				/* Create instance */
 				$less = new lessc;
+
+				if (!empty(self::$variables)) {
+					$less->setVariables(self::$variables);
+				}
 
 				/* Automatically compress if in live mode */
 				if (Director::isLive()) {
