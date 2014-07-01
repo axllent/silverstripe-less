@@ -1,7 +1,7 @@
 LESS CSS Module for SilverStripe
 ================================
 
-A wrapper for [lessphp](http://leafo.net/lessphp/) to integrate [LESS](http://lesscss.org/) in SilverStripe.
+A wrapper for [lessphp](http://leafo.net/lessphp/) to integrate [LESS](http://lesscss.org/) into SilverStripe.
 
 ## Features
 
@@ -87,7 +87,7 @@ div {
     background: url('@{ThemeDir}/images/icon-menu.png') no-repeat top center;
 }
 ```
-`@{ThemeDir}` will get substituted with `Director::baseURL() . SSViewer::get_theme_folder()`.
+`@{ThemeDir}` will get substituted with "`Director::baseURL() . SSViewer::get_theme_folder()`".
 
 You can add optionally your own global variables to your `mysite/_config.php`:
 
