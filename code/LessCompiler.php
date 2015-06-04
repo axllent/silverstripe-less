@@ -1,9 +1,9 @@
 <?php
 /**
- * LESS CSS compiler for SilverStripe
- * ===================================
+ * LESS.php CSS compiler for SilverStripe
+ * ======================================
  *
- * Extension to add Less CSS compiling to SilverStripe
+ * Extension to add Less.php CSS compiling to SilverStripe
  *
  * Usage: See README.md
  *
@@ -26,7 +26,7 @@ class LessCompiler extends Requirements_Backend {
 
 	function css($file, $media = null) {
 
-		/*
+		/**
 		 * Only initiate automatically if:
 		 * - webiste is in dev mode
 		 * - or a ?flush is called
@@ -41,41 +41,46 @@ class LessCompiler extends Requirements_Backend {
 				}
 			}
 
-			/* If less file, then check/compile it */
+			/* If less file exists, then check/compile it */
 			if (preg_match('/\.less$/i', $file)) {
 
 				$out = preg_replace('/\.less$/i', '.css', $file);
 
 				$css_file = Director::getAbsFile($out);
 
-				/* Force recompile if ?flush */
-				if (isset($_GET['flush'])) {
-					$compiler = 'compileFile';
-				}
-
-				/* Create instance */
-				$less = new lessc;
-
-				if (!empty(self::$variables)) {
-					$less->setVariables(self::$variables);
-				}
+				$options = array();
 
 				/* Automatically compress if in live mode */
 				if (Director::isLive()) {
-					$less->setFormatter("compressed");
+					$options['compress'] = true;
 				}
 
 				try {
 					/* Force recompile & only write to css if updated */
-					if (isset($_GET['flush'])) {
-						$compiled = $less->compileFile(Director::getAbsFile($file));
-						if (!is_file($css_file) || md5_file($css_file) != md5($compiled))
-							file_put_contents($css_file, $compiled);
-					} else {
-						$less->checkedCompile(Director::getAbsFile($file), $css_file);
+					if (isset($_GET['flush']) || !Director::isLive()) {
+
+						/* Create instance */
+						$parser = new Less_Parser($options);
+
+						if (!empty(self::$variables)) {
+							$parser->ModifyVars(self::$variables);
+						}
+
+						/* calculate the LESS file's parent URL */
+						$css_dir = rtrim(Director::baseURL(), '/').Director::makeRelative(dirname(Director::getAbsFile($file)).'/');
+
+						$parser->parseFile(Director::getAbsFile($file), $css_dir);
+
+						$css = $parser->getCss();
+
+						if (!is_file($css_file) || md5_file($css_file) != md5($css)) {
+							file_put_contents($css_file, $css);
+						}
+
 					}
-				} catch (Exception $ex) {
-					trigger_error("lessphp fatal error: " . $ex->getMessage(), E_USER_ERROR);
+				}
+				catch (Exception $ex) {
+					trigger_error("Less.php fatal error: " . $ex->getMessage(), E_USER_ERROR);
 				}
 
 				$file = $out;

@@ -1,26 +1,30 @@
-LESS CSS Module for SilverStripe
+Less.php module for SilverStripe
 ================================
 
-A wrapper for [lessphp](http://leafo.net/lessphp/) to integrate [LESS](http://lesscss.org/) into SilverStripe.
+A wrapper for [less.php](http://lessphp.gpeasy.com/) to integrate [LESS](http://lesscss.org/) into SilverStripe.
 
 ## Features
 
-* Uses lessphp http://leafo.net/lessphp/
+* Integrates less.php http://lessphp.gpeasy.com/ seemessly into SilverStripe
 * Based on lesscss from https://github.com/tardinha/silverstripe-lesscss
-* Includes flushing option (?flush=1) to regenerate CSS stylesheets
-(ie. force undetected less changes with @import)
+* Includes flushing option (?flush=1) to regenerate CSS stylesheets (ie. force
+  undetected less changes with @import)
 * Check all required *.css files for a *.less equivalent, so works transparently.
 * Allows custom global variables to be passed through to less compiling
+* Automatic image & @import URL translation (eg: `url('../image.png')`
+  will get rewritten as `url('/path/to/image.png')` depending on your website's
+  root folder)
+* Automatic compression of CSS files when in `Live` mode (may require an initial `?flush`)
 
 ## Requirements
 
 * SilverStripe 2 or 3
-* Webserver read & write permissions to the directories containing
-the *.less files to write compiled css files
+* Webserver must have read & write permissions to the directories containing
+  the *.less files to write compiled css files
 
 ## Usage
 
-In your `Template.ss` you can refer to your less files either by its "LESS name" (eg:`stylesheet.less`) or
+You can refer to your less files either by its "LESS name" (eg:`stylesheet.less`) or
 "CSS name" (eg:`stylesheet.css`) - the parser will check to see if there is a less file for all css files included.
 
 In your controller you can:
@@ -99,5 +103,5 @@ LessCompiler::addVariable("BaseURL" => "'http://example.com/'");
 
 **Note**: Be aware that the value of the variable is a string containing a CSS value.
 So if you want to pass a LESS string in, you're going to need two sets of quotes.
-One for PHP and one for LESS. If you get the error "**lessphp fatal error: failed to
+One for PHP and one for LESS. If you get the error "**less.php fatal error: failed to
 parse passed in variable**" then you probably need to add extra quoted to your value.

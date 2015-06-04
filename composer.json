@@ -1,9 +1,9 @@
 {
 	"name": "axllent/silverstripe-less",
-	"description": "Wrapper for lessphp to integrate LESS into SilverStripe",
+	"description": "Wrapper for less.php to integrate LESS into SilverStripe",
 	"type": "silverstripe-module",
 	"homepage": "https://github.com/axllent/silverstripe-less",
-	"keywords": ["silverstripe", "less", "css", "lessphp"],
+	"keywords": ["silverstripe", "less", "css", "lessphp", "less.php"],
 	"license": "The MIT License (MIT)",
 	"authors": [
 		{
