@@ -14,6 +14,8 @@
 class LessCompiler extends Requirements_Backend {
 
 	protected static $variables = array();
+	protected static $cacheDir;
+	protected static $cacheMethod;
 
 	/*
 	 * Allow manually adding variables
@@ -24,8 +26,23 @@ class LessCompiler extends Requirements_Backend {
 		self::$variables[$key] = $value;
 	}
 
-	function css($file, $media = null) {
+	/*
+	 * Set cache directory
+	 * @param $dir String
+	 */
+	public static function setCacheDir($dir) {
+		self::$cacheDir = $dir;
+	}
 
+	/*
+	 * Set cache method (for available methods check https://github.com/oyejorge/less.php#user-content-parser-caching)
+	 * @param $method String
+	 */
+	public static function setCacheMethod($method) {
+		self::$cacheMethod = $method;
+	}
+
+	function css($file, $media = null) {
 		/**
 		 * Only initiate automatically if:
 		 * - webiste is in dev mode
@@ -59,22 +76,29 @@ class LessCompiler extends Requirements_Backend {
 					/* Force recompile & only write to css if updated */
 					if (isset($_GET['flush']) || !Director::isLive()) {
 
-						/* Create instance */
-						$parser = new Less_Parser($options);
-
-						if (!empty(self::$variables)) {
-							$parser->ModifyVars(self::$variables);
+						/* Force deleting of cache on flush */
+						if (self::$cacheDir && file_exists(self::$cacheDir) && isset($_GET['flush'])) {
+							foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(self::$cacheDir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+								$path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+							}
+							rmdir(self::$cacheDir);
 						}
+						
+						/* Create cache directory if doesn't exist */
+						if (self::$cacheDir && !file_exists(self::$cacheDir)) mkdir(self::$cacheDir, 0775, true);
 
-						/* calculate the LESS file's parent URL */
+						/* Set cache options */
+						$options['cache_dir'] = self::$cacheDir;
+						if (isset(self::$cacheMethod)) $options['cache_method'] = self::$cacheMethod;
+
+						/* Calculate the LESS file's parent URL */
 						$css_dir = rtrim(Director::baseURL(), '/').Director::makeRelative(dirname(Director::getAbsFile($file)).'/');
+						
 
-						$parser->parseFile(Director::getAbsFile($file), $css_dir);
-
-						$css = $parser->getCss();
-
-						if (!is_file($css_file) || md5_file($css_file) != md5($css)) {
-							file_put_contents($css_file, $css);
+						/* Parse */
+						$cache_file = self::$cacheDir . '/'. Less_Cache::Get(array(Director::getAbsFile($file) => $css_dir), $options, self::$variables);
+						if (!is_file($css_file) || md5_file($css_file) != md5($cache_file)) {
+							copy($cache_file, $css_file);
 						}
 
 					}
