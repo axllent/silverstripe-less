@@ -29,7 +29,28 @@ You can refer to your less files either by its "LESS name" (eg:`stylesheet.less`
 
 In your controller you can:
 
-### Method 1
+### Method 1 (preferred)
+Simply refer to your files as `*.css` files. This ensures that cache is always used (unless a `?flush` is run), using `filemtime()` in "live" move (fastest), and Less_Cache in "dev" mode.
+
+```php
+class Page_Controller extends ContentController {
+
+	public function init() {
+		parent::init();
+		/* The parser will find css/stylesheet[1-3].less files are compile those */
+		$css[] = $this->ThemeDir() . '/css/stylesheet1.css';
+		$css[] = $this->ThemeDir() . '/css/stylesheet2.css';
+		$css[] = $this->ThemeDir() . '/css/stylesheet3.css';
+		Requirements::combine_files('combined.css', $css);
+		Requirements::process_combined_files();
+	}
+
+}
+```
+
+
+### Method 2
+You can optionally use the `*.less` names. **Note**: this option forces the use of Less_Cache in both "live" and "dev" modes.
 
 ```php
 class Page_Controller extends ContentController {
@@ -54,23 +75,6 @@ class Page_Controller extends ContentController {
 }
 ```
 
-### Method 2
-
-```php
-class Page_Controller extends ContentController {
-
-	public function init() {
-		parent::init();
-		/* The parser will find css/stylesheet[1-3].less files are compile those */
-		$css[] = $this->ThemeDir() . '/css/stylesheet1.css';
-		$css[] = $this->ThemeDir() . '/css/stylesheet2.css';
-		$css[] = $this->ThemeDir() . '/css/stylesheet3.css';
-		Requirements::combine_files('combined.css', $css);
-		Requirements::process_combined_files();
-	}
-
-}
-```
 
 ### Method 3
 
