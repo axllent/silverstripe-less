@@ -5,7 +5,7 @@ Requirements::set_backend(new LessCompiler());
 LessCompiler::addVariable('ThemeDir', '"' . Director::baseURL() . SSViewer::get_theme_folder() . '"');
 
 /* Set default cache directory */
-LessCompiler::setCacheDir(Director::baseFolder() . '/' . SSViewer::get_theme_folder() . '/.tmp/less');
+LessCompiler::setCacheDir(TEMP_FOLDER . '/less-cache');
 
 /* Set default cache method */
 LessCompiler::setCacheMethod('serialize');
