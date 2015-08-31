@@ -116,7 +116,7 @@ class LessCompiler extends Requirements_Backend {
 					}
 				}
 				catch (Exception $ex) {
-					trigger_error("Less.php fatal error: " . $ex->getMessage(), E_USER_ERROR);
+					trigger_error('Less.php fatal error: ' . $ex->getMessage(), E_USER_ERROR);
 				}
 
 				$file = $out;
