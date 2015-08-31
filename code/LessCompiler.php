@@ -109,7 +109,7 @@ class LessCompiler extends Requirements_Backend {
 						);
 
 						/* check cache vs. css and overwrite if necessary */
-						if (!is_file($css_file) || md5_file($css_file) != md5($cached_file)) {
+						if (!is_file($css_file) || md5_file($css_file) != md5_file($cached_file)) {
 							copy($cached_file, $css_file);
 						}
 
