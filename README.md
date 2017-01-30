@@ -4,19 +4,22 @@ A wrapper for [less.php](http://lessphp.gpeasy.com/) to integrate [LESS](http://
 ## Features
 - Integrates less.php [http://lessphp.gpeasy.com/](http://lessphp.gpeasy.com/) seemessly into SilverStripe
 - Based on lesscss from [https://github.com/tardinha/silverstripe-lesscss](https://github.com/tardinha/silverstripe-lesscss)
-- Includes flushing option (?flush=1) to regenerate CSS stylesheets (ie. force
-- undetected less changes with @import)
-- Check all required _.css files for a _.less equivalent, so works transparently.
+- Includes flushing option (?flush=1) to regenerate CSS stylesheets (ie. force undetected less changes with @import)
+- Check all required _.css files for a _.less equivalent, so works transparently
 - Allows custom global variables to be passed through to less compiling
-- Automatic image & @import URL translation (eg: `url('../image.png')`
-- will get rewritten as `url('/path/to/image.png')` depending on your website's
-- root folder)
+- Automatic image & @import URL translation (eg: `url('../image.png')` will get rewritten
+as `url('/path/to/image.png')` depending on your website's root folder)
 - Automatic compression of CSS files when in `Live` mode (may require an initial `?flush`)
 
 ## Requirements
-- SilverStripe 2 or 3
+- SilverStripe 3
 - Webserver must have read & write permissions to the directories containing
 - the *.less files to write compiled css files
+
+## Installation
+```
+composer require axllent/silverstripe-less
+```
 
 ## Usage
 You can refer to your less files either by its "LESS name" (eg:`stylesheet.less`) or "CSS name" (eg:`stylesheet.css`) - the parser will check to see if there is a less file for all css files included.

@@ -16,6 +16,6 @@
 	},
 	"require": {
 		"silverstripe/framework": "^3.0",
-        "oyejorge/less.php": "^1.7"
+        "oyejorge/less.php": "~1.5"
 	}
 }
