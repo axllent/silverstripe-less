@@ -144,7 +144,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
         // eg: themes/site/css/file.less becomes themes-site-css-file.css
         $url_friendly_css_name = $this->file_name_filter->filter(
             str_replace('/', '-', preg_replace('/\.less$/i', '', $less_file))
-        ) . ' .css';
+        ) . '.css';
 
         $css_file = $this->getCombinedFilesFolder() . '/' . $url_friendly_css_name;
 
