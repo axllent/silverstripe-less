@@ -3,18 +3,19 @@ A wrapper for [less.php](http://lessphp.gpeasy.com/) to integrate [LESS](http://
 
 ## Features
 - Integrates less.php [http://lessphp.gpeasy.com/](http://lessphp.gpeasy.com/) seemessly into SilverStripe
-- Based on lesscss from [https://github.com/tardinha/silverstripe-lesscss](https://github.com/tardinha/silverstripe-lesscss)
 - Includes flushing option (?flush=1) to regenerate CSS stylesheets (ie. force undetected less changes with @import)
 - Check all required _.css files for a _.less equivalent, so works transparently
 - Allows custom global variables to be passed through to less compiling
 - Automatic image & @import URL translation (eg: `url('../image.png')` will get rewritten
 as `url('/path/to/image.png')` depending on your website's root folder)
 - Automatic compression of CSS files when in `Live` mode (may require an initial `?flush`)
+- Writes processed *.less files into `assets/_combinedfiles` and automatically modifies css paths
 
 ## Requirements
-- SilverStripe 3
-- Webserver must have read & write permissions to the directories containing
-- the *.less files to write compiled css files
+- SilverStripe 4
+
+For SilverStripe 3, please refer to the [SilverStripe3 branch](https://github.com/axllent/silverstripe-less/tree/silverstripe3).
+
 
 ## Installation
 ```
@@ -22,22 +23,24 @@ composer require axllent/silverstripe-less
 ```
 
 ## Usage
-You can refer to your less files either by its "LESS name" (eg:`stylesheet.less`) or "CSS name" (eg:`stylesheet.css`) - the parser will check to see if there is a less file for all css files included.
+You can refer to your less files either by its "LESS name" (eg:`stylesheet.less`) or "CSS name" (eg:`stylesheet.css`) - the parser will also check to see if there is a less file for any css files included.
 
-In your controller you can:
+In your `PageController` you can:
 
 ### Method 1 (preferred)
 Simply refer to your files as `*.css` files. This ensures that cache is always used (unless a `?flush` is run), using `filemtime()` in "live" move (fastest), and Less_Cache in "dev" mode.
 
 ```php
-class Page_Controller extends ContentController {
+class PageController extends ContentController
+{
 
-    public function init() {
+    public function init()
+    {
         parent::init();
-        /* The parser will find css/stylesheet[1-3].less files are compile those */
-        $css[] = $this->ThemeDir() . '/css/stylesheet1.css';
-        $css[] = $this->ThemeDir() . '/css/stylesheet2.css';
-        $css[] = $this->ThemeDir() . '/css/stylesheet3.css';
+        /* The parser will find themes/site/css/stylesheet[1-3].less files are compile those */
+        $css[] = 'themes/site/css/stylesheet1.css';
+        $css[] = 'themes/site/css/stylesheet2.css';
+        $css[] = 'themes/site/css/stylesheet3.css';
         Requirements::combine_files('combined.css', $css);
         Requirements::process_combined_files();
     }
@@ -46,55 +49,36 @@ class Page_Controller extends ContentController {
 ```
 
 ### Method 2
-You can optionally use the `*.less` names. **Note**: this option forces the use of Less_Cache in both "live" and "dev" modes.
+
+You can import less files directly from your template file:
 
 ```php
-class Page_Controller extends ContentController {
-
-    public function init() {
-        parent::init();
-        if ( Director::isDev() ){
-            Requirements::css($this->ThemeDir() . '/css/stylesheet1.less');
-            Requirements::css($this->ThemeDir() . '/css/stylesheet2.less');
-            Requirements::css($this->ThemeDir() . '/css/stylesheet3.less');
-        } else {
-            /* combined.less simply includes a merged list of the above stylesheets
-            * in the same order as above:
-            * @import "stylesheet1";
-            * @import "stylesheet2";
-            * @import "stylesheet3";
-            */
-            Requirements::css($this->ThemeDir() . '/css/combined.less');
-        }
-    }
-
-}
+    <% require css(themes/site/css/stylesheet.less) %>
 ```
 
-### Method 3
-or you can call it directly from your template file:
-
-```php
-    <% require css(themes/mytheme/css/stylesheet.less) %>
+In both examples, the generated HTML will point automatically to the **processed** CSS file in `assets/_combinedfiles` rather than the original less file, for example
 ```
+<link rel="stylesheet" type="text/css"  href="/assets/_combinedfiles/themes-site-css-stylesheet.css?m=1488490838" />
+```
+
 
 ## Custom global variables
-By default silverstripe-lesscss includes one custom global variable `ThemeDir` which you are able to use in your `less` files:
+If you wish to add custom variables you can simply add something like this to your `config.yml` file:
 
-```css
-div {
-    background: url('@{ThemeDir}/images/icon-menu.png') no-repeat top center;
+```
+Axllent\Less\LessCompiler:
+  variables:
+    'HeaderFont': '"Arial, sans-serif"' # note the quotes, see below!
+    'HeaderFontSize': '18px'
+```
+
+And then in your `*.less` files you can use those variables:
+
+```
+header h1 {
+    font-family: @HeaderFont;
+    font-size: @HeaderFontSize;
 }
 ```
 
-`@{ThemeDir}` will get substituted with "`Director::baseURL() . SSViewer::get_theme_folder()`".
-
-You can add optionally your own global variables to your `mysite/_config.php`:
-
-```php
-LessCompiler::addVariable("StandardFont", "Arial, helvetica, sans-serif");
-LessCompiler::addVariable("BaseURL" => "'http://example.com/'");
-// note the double-quote, see below...
-```
-
-**Note**: Be aware that the value of the variable is a string containing a CSS value. So if you want to pass a LESS string in, you're going to need two sets of quotes. One for PHP and one for LESS. If you get the error "**less.php fatal error: failed to parse passed in variable**" then you probably need to add extra quoted to your value.
+**Note**: Remember quote your yml variable values if your CSS requires quotes (see `HeaderFont` above).
