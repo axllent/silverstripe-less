@@ -1,9 +1,9 @@
 <?php
 
 use Axllent\Less\LessCompiler;
-use SilverStripe\Control\Director;
+// use SilverStripe\Control\Director;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
+// use SilverStripe\View\SSViewer;
 
 $backend = LessCompiler::create();
 Requirements::set_backend($backend);

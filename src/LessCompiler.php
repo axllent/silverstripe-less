@@ -2,11 +2,12 @@
 
 namespace Axllent\Less;
 
-// use FilesystemIterator;
-// use RecursiveDirectoryIterator;
-// use RecursiveIteratorIterator;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Requirements_Backend;
 
@@ -22,24 +23,44 @@ use SilverStripe\View\Requirements_Backend;
  * Authors: Techno Joy development team (www.technojoy.co.nz)
  */
 
-class LessCompiler extends Requirements_Backend
+class LessCompiler extends Requirements_Backend implements Flushable
 {
 
     protected static $variables = array();
 
-    protected static $cache_dir;
+    protected static $cache_dir = TEMP_FOLDER . '/less-cache';
 
     protected static $cache_method = 'serialize';
 
     protected static $already_flushed = false;
 
-    protected $processed_files = [];
+    protected static $processed_files = [];
 
     public function __construct()
     {
         $this->asset_handler = $this->getAssetHandler();
 
-        $this->file_filter = FileNameFilter::create();
+        $this->file_name_filter = FileNameFilter::create();
+
+        $this->is_dev = Director::isDev();
+    }
+
+    /**
+     * Triggered early in the request when a flush is requested
+     */
+    public static function flush()
+    {
+        if (!self::$already_flushed && file_exists(self::getCacheDir())) {
+            $paths = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator(self::getCacheDir(), FilesystemIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach ($paths as $path) {
+                $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+            }
+            /* make sure we only flush once per request and not for each *.less */
+            self::$already_flushed = true;
+        }
     }
 
     /**
@@ -61,9 +82,9 @@ class LessCompiler extends Requirements_Backend
         self::$cache_dir = rtrim($dir, '/');
     }
 
-    public function getCacheDir()
+    public static function getCacheDir()
     {
-        return (self::$cache_dir) ? self::$cache_dir : TEMP_FOLDER . '/less-cache';
+        return TEMP_FOLDER . '/less-cache';
     }
 
     /**
@@ -87,35 +108,39 @@ class LessCompiler extends Requirements_Backend
 
     public function css($file, $media = null)
     {
-
-        $css_file = $this->processLessFile($file);
+        $css_file = $this->processIfLessFile($file);
         return parent::css($css_file, $media);
     }
 
+    /**
+     * Process any less files and return new filenames
+     * See Requirements_Backend->combineFiles() for options
+     */
     public function combineFiles($combinedFileName, $files, $options = array())
     {
-        $output = [];
+        $new_files = [];
 
         foreach ($files as $file) {
-            $output[] = $this->processLessFile($file);
+            $new_files[] = $this->processIfLessFile($file);
         }
 
-        return parent::combineFiles($combinedFileName, $output, $options);
+        return parent::combineFiles($combinedFileName, $new_files, $options);
     }
 
-    public function processLessFile($file)
+    /**
+     * Process less file (if detected)
+     * @param String (original)
+     * @return String (new filename)
+     */
+    public function processIfLessFile($file)
     {
-        echo $file;
-        if (!empty($this->processed_files[$file])) {
-            echo "Processed " . $this->processed_files[$file] . ' already<br />';
-            return $this->processed_files[$file];
+        // don't re-process files
+        if (!empty(self::$processed_files[$file])) {
+            return self::$processed_files[$file];
         }
 
-        print_r($this->processed_files);
-
-
         if (!preg_match('/\.(css|less)$/', $file)) {
-            $this->processed_files[$file] = $file; // set so we don't re-process files
+            self::$processed_files[$file] = $file; // set so we don't re-process files
             return $file;
         }
 
@@ -128,25 +153,26 @@ class LessCompiler extends Requirements_Backend
 
         $css_file = str_replace('/', '-', preg_replace('/\.less$/i', '', $less_file));
 
-        $css_file = $this->getCombinedFilesFolder() . '/' . $this->file_filter->filter($css_file) . '.css';
+        $css_file = $this->getCombinedFilesFolder() . '/' . $this->file_name_filter->filter($css_file) . '.css';
 
         $output_file = $this->asset_handler->getContentURL($css_file);
 
-        if (is_null($output_file) || !Director::isDev()) {
+        if (is_null($output_file) || $this->is_dev) {
 
-            $cache_dir = $this->getCacheDir();
+            $cache_dir = self::getCacheDir();
 
             $less_base = dirname(Director::baseURL() . $less_file) . '/'; // generate relative links in css
 
-            /* Set cache directory */
+            // Set less options
             $options = [
                 'cache_dir' => $cache_dir,
-                'cache_method' => self::$cache_method
+                'cache_method' => self::$cache_method,
+                'compress' => Director::isLive() // compress if live
             ];
 
             $current_raw_css = $this->asset_handler->getContent($css_file);
 
-            /* Generate and return compiled/cached file path */
+            // Generate and return compiled/cached file path
             $cached_file = $cache_dir . '/' . \Less_Cache::Get(
                 array(
                     Director::getAbsFile($less_file) => $less_base
@@ -164,7 +190,8 @@ class LessCompiler extends Requirements_Backend
 
         $parsed_file = Director::makeRelative($output_file);
 
-        $this->processed_files[$file] = $parsed_file;
+        self::$processed_files[$file] = $parsed_file;
+        self::$processed_files[$parsed_file] = $parsed_file;
 
         return $parsed_file;
     }
