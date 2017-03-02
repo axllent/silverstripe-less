@@ -69,6 +69,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
     /**
      * Triggered early in the request when a flush is requested
+     * Deletes the less.php cache folder and regenerates
      */
     public static function flush()
     {
@@ -90,12 +91,11 @@ class LessCompiler extends Requirements_Backend implements Flushable
       * Processes *.less files if detected and rewrites URLs
       *
       * @param string $file The CSS file to load, relative to site root
-      * @param string $media Comma-separated list of media types to use in the link tag
-      *                      (e.g. 'screen,projector')
+      * @param string $media Comma-separated list of media types to use in the link tag (e.g. 'screen,projector')
       */
     public function css($file, $media = null)
     {
-        $css_file = $this->processIfLessFile($file);
+        $css_file = $this->processLessFile($file);
         return parent::css($css_file, $media);
     }
 
@@ -108,31 +108,26 @@ class LessCompiler extends Requirements_Backend implements Flushable
         $new_files = [];
 
         foreach ($files as $file) {
-            $new_files[] = $this->processIfLessFile($file);
+            $new_files[] = $this->processLessFile($file);
         }
 
         return parent::combineFiles($combinedFileName, $new_files, $options);
     }
 
     /**
-     * Process less file (if detected)
+     * Process less file (if detected) and return new URL
      * @param String (original)
      * @return String (new filename)
      */
-    protected function processIfLessFile($file)
+    protected function processLessFile($file)
     {
         // make sure we only parse this file once per request
-        if (!empty(self::$processed_files[$file])) {
+        if (!empty(self::$processed_files[$file]) || !preg_match('/\.less$/', $file)) {
+            self::$processed_files[$file] = $file;
             return self::$processed_files[$file];
         }
 
-        // return file is it doesn't have *.(css|less) extension
-        if (!preg_match('/\.(css|less)$/', $file)) {
-            self::$processed_files[$file] = $file;
-            return $file;
-        }
-
-        $less_file = preg_replace('/\.css$/i', '.less', $file);
+        $less_file = $file;
 
         // return if not a *.less file
         if (!is_file(Director::getAbsFile($less_file))) {

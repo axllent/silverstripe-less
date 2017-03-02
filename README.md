@@ -4,12 +4,11 @@ A wrapper for [less.php](http://lessphp.gpeasy.com/) to integrate [LESS](http://
 ## Features
 - Integrates less.php [http://lessphp.gpeasy.com/](http://lessphp.gpeasy.com/) seemessly into SilverStripe
 - Includes flushing option (?flush=1) to regenerate CSS stylesheets (ie. force undetected less changes with @import)
-- Check all required _.css files for a _.less equivalent, so works transparently
+- Writes processed *.less files into `assets/_combinedfiles` and automatically modifies css paths
 - Allows custom global variables to be passed through to less compiling
 - Automatic image & @import URL translation (eg: `url('../image.png')` will get rewritten
 as `url('/path/to/image.png')` depending on your website's root folder)
 - Automatic compression of CSS files when in `Live` mode (may require an initial `?flush`)
-- Writes processed *.less files into `assets/_combinedfiles` and automatically modifies css paths
 
 ## Requirements
 - SilverStripe 4
@@ -23,12 +22,10 @@ composer require axllent/silverstripe-less
 ```
 
 ## Usage
-You can refer to your less files either by its "LESS name" (eg:`stylesheet.less`) or "CSS name" (eg:`stylesheet.css`) - the parser will also check to see if there is a less file for any css files included.
-
-In your `PageController` you can:
+You need refer to your less files by its "LESS name" (eg:`stylesheet.less`).
 
 ### Method 1 (preferred)
-Simply refer to your files as `*.css` files. This ensures that cache is always used (unless a `?flush` is run), using `filemtime()` in "live" move (fastest), and Less_Cache in "dev" mode.
+You can refer to your files as `*.less` files.
 
 ```php
 class PageController extends ContentController
@@ -37,10 +34,9 @@ class PageController extends ContentController
     public function init()
     {
         parent::init();
-        /* The parser will find themes/site/css/stylesheet[1-3].less files are compile those */
-        $css[] = 'themes/site/css/stylesheet1.css';
-        $css[] = 'themes/site/css/stylesheet2.css';
-        $css[] = 'themes/site/css/stylesheet3.css';
+        $css[] = 'themes/site/css/stylesheet1.less';
+        $css[] = 'themes/site/css/stylesheet2.less';
+        $css[] = 'themes/site/css/stylesheet3.less';
         Requirements::combine_files('combined.css', $css);
         Requirements::process_combined_files();
     }
@@ -81,4 +77,4 @@ header h1 {
 }
 ```
 
-**Note**: Remember quote your yml variable values if your CSS requires quotes (see `HeaderFont` above).
+**Note**: Remember quote your yml variable values if your CSS requires a quoted string (see `HeaderFont` example above).
