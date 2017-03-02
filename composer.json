@@ -14,8 +14,13 @@
 	"support": {
 		"issues": "https://github.com/axllent/silverstripe-less/issues"
 	},
-	"require": {
-		"silverstripe/framework": "^3.0",
+    "require": {
+		"silverstripe/framework": "^4.0@dev",
         "oyejorge/less.php": "~1.5"
-	}
+	},
+    "autoload": {
+        "psr-4": {
+            "Axllent\\Less\\": "src/"
+        }
+    }
 }
