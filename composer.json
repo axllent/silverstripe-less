@@ -16,7 +16,7 @@
 	},
     "require": {
 		"silverstripe/framework": "^4.0@dev",
-        "oyejorge/less.php": "~1.5"
+        "asenar/less.php": "~1.7.0.13"
 	},
     "autoload": {
         "psr-4": {
