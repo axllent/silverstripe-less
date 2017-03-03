@@ -7,10 +7,10 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Requirements_Backend;
-use SilverStripe\Core\Config\Config;
 
 /**
  * LESS.php CSS compiler for SilverStripe
@@ -86,13 +86,13 @@ class LessCompiler extends Requirements_Backend implements Flushable
         }
     }
 
-     /**
-      * Register the given stylesheet into the list of requirements.
-      * Processes *.less files if detected and rewrites URLs
-      *
-      * @param string $file The CSS file to load, relative to site root
-      * @param string $media Comma-separated list of media types to use in the link tag (e.g. 'screen,projector')
-      */
+    /**
+     * Register the given stylesheet into the list of requirements.
+     * Processes *.less files if detected and rewrites URLs
+     *
+     * @param string $file The CSS file to load, relative to site root
+     * @param string $media Comma-separated list of media types to use in the link tag (e.g. 'screen,projector')
+     */
     public function css($file, $media = null)
     {
         $css_file = $this->processLessFile($file);
