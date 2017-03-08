@@ -2,6 +2,9 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.0.1]
+- Fix bug when avoiding re-processing files
+
 ## [2.0.0]
 - Support for SilverStripe 4 (namespacing)
 - Generate CSS files in `assets/_combinedfiles` rather than *.less folder
