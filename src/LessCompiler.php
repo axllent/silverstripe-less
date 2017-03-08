@@ -123,7 +123,6 @@ class LessCompiler extends Requirements_Backend implements Flushable
     {
         // make sure we only parse this file once per request
         if (!empty(self::$processed_files[$file]) || !preg_match('/\.less$/', $file)) {
-            self::$processed_files[$file] = $file;
             return self::$processed_files[$file];
         }
 
