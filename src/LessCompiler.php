@@ -121,8 +121,9 @@ class LessCompiler extends Requirements_Backend implements Flushable
      */
     protected function processLessFile($file)
     {
-        // make sure we only parse this file once per request
-        if (!empty(self::$processed_files[$file]) || !preg_match('/\.less$/', $file)) {
+        if (!preg_match('/\.less$/', $file)) { // Not a less file
+            return $file;
+        } elseif (!empty(self::$processed_files[$file])) { // already processed
             return self::$processed_files[$file];
         }
 
