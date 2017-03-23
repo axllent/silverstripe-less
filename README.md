@@ -4,7 +4,7 @@ A wrapper for [less.php](https://github.com/Asenar/less.php) to integrate [LESS]
 
 ## Features
 
-- Integrates a fork of [less.php][https://github.com/Asenar/less.php) seemessly into SilverStripe
+- Integrates a fork of [less.php](https://github.com/Asenar/less.php) seemessly into SilverStripe
 - Includes flushing option (`?flush`) to regenerate CSS stylesheets (ie. force undetected less changes with @import)
 - Writes processed *.css files into `assets/_combinedfiles` and automatically modifies `Requirements` paths
 - Allows custom global variables to be passed through to less compiling (yaml configuration)
