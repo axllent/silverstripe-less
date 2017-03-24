@@ -119,7 +119,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
      * @param String (original)
      * @return String (new filename)
      */
-    protected function processLessFile($file)
+    public function processLessFile($file)
     {
         if (!preg_match('/\.less$/', $file)) { // Not a less file
             return $file;
@@ -129,7 +129,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
         $less_file = $file;
 
-        // return if not a *.less file
+        // return if not a file
         if (!is_file(Director::getAbsFile($less_file))) {
             self::$processed_files[$file] = $file;
             return $file;
