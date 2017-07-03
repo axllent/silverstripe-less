@@ -12,11 +12,14 @@ Axllent\Less\LessCompiler:
     'HeaderFontSize': '18px'
 ```
 
-## cache_method
+## Setting cache_method
+
 Only two caching methods are supported, `serialize` and `php`
 (see [documentation](https://github.com/Asenar/less.php#caching)).
 
-## variables
+
+## Variables
+
 This allows you to add your own variables which you can then use in your `*.less` stylesheets.
 The above example would provide you with two variables, namely `@HeaderFont` and `@HeaderFontSize`.
 
