@@ -11,6 +11,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Requirements_Backend;
+use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 
 /**
  * LESS.php CSS compiler for SilverStripe
@@ -64,7 +65,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
      */
     public function getAssetHandler()
     {
-        return Injector::inst()->get('GeneratedAssetHandler');
+        return Injector::inst()->get(GeneratedAssetHandler::class);
     }
 
     /**
