@@ -10,6 +10,7 @@ A wrapper for [less.php](https://github.com/Asenar/less.php) to integrate [LESS]
 - Allows custom global variables to be passed through to less compiling (yaml configuration)
 - Automatic image & @import URL translation (eg: `url('../image.png')` will get rewritten as `url('/path/to/image.png')` depending on your website's root folder)
 - Automatic compression of CSS files when in `Live` mode (may require an initial `?flush`)
+- Adds any processed editor.less files to TinyMCE (must be included in your front-end template)
 
 ## Requirements
 
