@@ -15,7 +15,7 @@
 		"issues": "https://github.com/axllent/silverstripe-less/issues"
 	},
     "require": {
-		"silverstripe/framework": "^4.0@dev",
+		"silverstripe/framework": "^4.0",
         "asenar/less.php": "^1.7"
 	},
     "autoload": {
