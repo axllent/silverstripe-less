@@ -2,6 +2,10 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.0.3]
+- Use static defaults
+- Add any rendered editor.less to TinyMCE
+
 ## [2.0.2]
 - Fix bug mixing in CSS files
 

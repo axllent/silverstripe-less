@@ -29,3 +29,7 @@ header h1 {
     font-size: @HeaderFontSize;
 }
 ```
+
+## Editor CSS
+
+The less compiler will automatically add any editor.less file (used on the front-end) to TinyMCE.
