@@ -28,6 +28,17 @@ use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 class LessCompiler extends Requirements_Backend implements Flushable
 {
 
+    /**
+     * @config
+     */
+    private static $cache_method = 'serialize';
+
+    /**
+     * @config
+     */
+    private static $variables = [];
+
+
     private static $already_flushed = false;
 
     private static $processed_files = [];
@@ -36,16 +47,11 @@ class LessCompiler extends Requirements_Backend implements Flushable
     {
         $this->config = Config::inst();
 
-        $this->cache_method = $this->config->get('Axllent\Less\LessCompiler', 'cache_method');
-
         $this->asset_handler = $this->getAssetHandler();
 
         $this->file_name_filter = FileNameFilter::create();
 
         $this->is_dev = Director::isDev();
-
-        $this->variables = $this->config->get('Axllent\Less\LessCompiler', 'variables') ?
-            $this->config->get('Axllent\Less\LessCompiler', 'variables') : [];
     }
 
     /**
@@ -153,19 +159,23 @@ class LessCompiler extends Requirements_Backend implements Flushable
             $less_base = dirname(Director::baseURL() . $less_file) . '/';
 
             // Set less options
+            $cache_method = $this->config->get('Axllent\\Less\\LessCompiler', 'cache_method');
+
             $options = [
                 'cache_dir' => $cache_dir,
-                'cache_method' => $this->cache_method,
+                'cache_method' => $cache_method,
                 'compress' => Director::isLive() // compress CSS if live
             ];
 
             $current_raw_css = $this->asset_handler->getContent($css_file);
 
             // Generate and return compiled/cached file path
+            $variables = $this->config->get('Axllent\\Less\\LessCompiler', 'variables');
+
             $cached_file = $cache_dir . '/' . \Less_Cache::Get(
                 array(Director::getAbsFile($less_file) => $less_base),
                 $options,
-                $this->variables
+                $variables
             );
 
             if (is_null($output_file) || md5($current_raw_css) != md5_file($cached_file)) {

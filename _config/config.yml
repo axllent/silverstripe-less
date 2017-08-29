@@ -1,3 +1,0 @@
-Axllent\Less\LessCompiler:
-  cache_method: 'serialize'   # (serialize|php)
-  variables: []
