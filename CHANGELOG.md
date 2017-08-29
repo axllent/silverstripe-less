@@ -2,15 +2,24 @@
 
 Notable changes to this project will be documented in this file.
 
-## [2.0.3]
+## [2.0.4]
 - Use static defaults
 - Add any rendered editor.less to TinyMCE
+
+
+## [2.0.3]
+- Support changes in SilverStripe 4.0.0-beta1
+- Use static defaults
+- Add any rendered editor.less to TinyMCE
+
 
 ## [2.0.2]
 - Fix bug mixing in CSS files
 
+
 ## [2.0.1]
 - Fix bug when avoiding re-processing files
+
 
 ## [2.0.0]
 - Support for SilverStripe 4 (namespacing)
@@ -21,6 +30,7 @@ the original [less.php](http://lessphp.gpeasy.com/) isn't being maintained any m
 - Drop use of `*.css` files in `Requirements` - now you must use the `*.less` extensions (too much unneccessary overhead and checking)
 - Completely rewrite `LessCompiler` to use system `AssetHandler` for generated CSS storage
 - Add documentation & Changelog
+
 
 ## [1.1.0]
 
