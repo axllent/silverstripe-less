@@ -1,8 +1,4 @@
 <?php
-/**
- * Add any rendered editor.less to TinyMCE
- */
-
 namespace Axllent\Less\Extensions;
 
 use FilesystemIterator;
@@ -11,6 +7,9 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\View\Requirements;
 
+/**
+ * Add any rendered editor.less to TinyMCE
+ */
 class HTMLEditor extends LeftAndMainExtension
 {
 
