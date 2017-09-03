@@ -12,10 +12,8 @@ use SilverStripe\View\Requirements;
  */
 class HTMLEditor extends LeftAndMainExtension
 {
-
     public function onBeforeInit()
     {
-
         $asset_handler = Requirements::backend()->getAssetHandler();
 
         $combined_folder = Requirements::backend()->getCombinedFilesFolder();
@@ -30,8 +28,7 @@ class HTMLEditor extends LeftAndMainExtension
 
         $editor_css = [];
 
-        foreach($files as $file)
-        {
+        foreach ($files as $file) {
             $css = $file->getFilename();
             if (preg_match('/\-editor\.css$/', $css)) {
                 $editor_css[] = Director::makeRelative($folder . '/' . $css);
@@ -44,5 +41,4 @@ class HTMLEditor extends LeftAndMainExtension
 
         Config::modify()->merge('SilverStripe\\Forms\\HTMLEditor\\TinyMCEConfig', 'editor_css', $editor_css);
     }
-
 }
