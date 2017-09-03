@@ -2,26 +2,36 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.0.5]
+
+- Init LessCompiler via Controller Extension rather than _config.php
+
+
 ## [2.0.4]
+
 - Use static defaults
 - Add any rendered editor.less to TinyMCE
 
 
 ## [2.0.3]
+
 - Support changes in SilverStripe 4.0.0-beta1
 - Use static defaults
 - Add any rendered editor.less to TinyMCE
 
 
 ## [2.0.2]
+
 - Fix bug mixing in CSS files
 
 
 ## [2.0.1]
+
 - Fix bug when avoiding re-processing files
 
 
 ## [2.0.0]
+
 - Support for SilverStripe 4 (namespacing)
 - Generate CSS files in `assets/_combinedfiles` rather than *.less folder
 - Switch to YAML config
