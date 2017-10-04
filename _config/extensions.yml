@@ -1,6 +1,9 @@
-SilverStripe\Control\Controller:
-  extensions:
-    - Axllent\Less\Extensions\LessController
+---
+Name: lesscompiler
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\View\Requirements_Backend:
+    class: Axllent\Less\LessCompiler
 
 SilverStripe\Admin\LeftAndMain:
   extensions:
