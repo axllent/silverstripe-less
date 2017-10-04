@@ -2,6 +2,11 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.0.6]
+
+- Use Injector to set Requirements_Backend
+
+
 ## [2.0.5]
 
 - Init LessCompiler via Controller Extension rather than _config.php
