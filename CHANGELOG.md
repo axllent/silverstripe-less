@@ -2,6 +2,11 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.1.0]
+
+- Ensure that error pages do not include combined assets
+
+
 ## [2.0.7]
 
 - Switch to silverstripe-vendormodule
