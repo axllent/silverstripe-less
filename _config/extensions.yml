@@ -9,6 +9,6 @@ SilverStripe\Admin\LeftAndMain:
   extensions:
     - Axllent\Less\Extensions\HTMLEditor
 
-SilverStripe\Control\Controller:
+SilverStripe\ErrorPage\ErrorPageController:
   extensions:
-    - Axllent\Less\Extensions\LessPageControllerExtension
+    - Axllent\Less\Extensions\ErrorPageControllerExtension
