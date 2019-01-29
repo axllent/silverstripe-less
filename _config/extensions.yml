@@ -8,3 +8,7 @@ SilverStripe\Core\Injector\Injector:
 SilverStripe\Admin\LeftAndMain:
   extensions:
     - Axllent\Less\Extensions\HTMLEditor
+
+SilverStripe\Control\Controller:
+  extensions:
+    - Axllent\Less\Extensions\LessPageControllerExtension
