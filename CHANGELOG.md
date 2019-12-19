@@ -2,6 +2,12 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.2.0]
+
+- Add third `$options` arg to `css()` for SS 4.5.0 compatibility
+- Set requirement silverstripe/framework:^4.5
+
+
 ## [2.1.0]
 
 - Ensure that error pages do not include combined assets
