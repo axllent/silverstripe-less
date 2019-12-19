@@ -1,17 +1,16 @@
 <?php
-
 namespace Axllent\Less;
 
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SilverStripe\Assets\FileNameFilter;
+use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Requirements_Backend;
-use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 
 /**
  * LESS.php CSS compiler for SilverStripe
@@ -38,9 +37,14 @@ class LessCompiler extends Requirements_Backend implements Flushable
      */
     private static $variables = [];
 
-
+    /**
+     * @var mixed
+     */
     private static $already_flushed = false;
 
+    /**
+     * @var array
+     */
     private static $processed_files = [];
 
     public function __construct()
@@ -95,22 +99,26 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
     /**
      * Register the given stylesheet into the list of requirements.
-     * Processes *.less files if detected and rewrites URLs
+     * Processes *.scss files if detected and rewrites URLs
      *
-     * @param string $file The CSS file to load, relative to site root
-     * @param string $media Comma-separated list of media types to use in the link tag (e.g. 'screen,projector')
+     * @param string $file    The CSS file to load, relative to site root
+     * @param string $media   Media types (e.g. 'screen,projector')
+     * @param array  $options List of options.
+     *
+     * @return void
      */
-    public function css($file, $media = null)
+    public function css($file, $media = null, $options = [])
     {
         $css_file = $this->processLessFile($file);
-        return parent::css($css_file, $media);
+
+        return parent::css($css_file, $media, $options);
     }
 
     /**
      * Process any less files and return new filenames
      * @See Requirements_Backend->combineFiles() for options
      */
-    public function combineFiles($combinedFileName, $files, $options = array())
+    public function combineFiles($combinedFileName, $files, $options = [])
     {
         $new_files = [];
 
@@ -139,6 +147,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
         // return if not a file
         if (!is_file(Director::getAbsFile($less_file))) {
             self::$processed_files[$file] = $file;
+
             return $file;
         }
 
@@ -162,9 +171,9 @@ class LessCompiler extends Requirements_Backend implements Flushable
             $cache_method = $this->config->get('Axllent\\Less\\LessCompiler', 'cache_method');
 
             $options = [
-                'cache_dir' => $cache_dir,
+                'cache_dir'    => $cache_dir,
                 'cache_method' => $cache_method,
-                'compress' => Director::isLive() // compress CSS if live
+                'compress'     => Director::isLive(), // compress CSS if live
             ];
 
             $current_raw_css = $this->asset_handler->getContent($css_file);
@@ -173,7 +182,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
             $variables = $this->config->get('Axllent\\Less\\LessCompiler', 'variables');
 
             $cached_file = $cache_dir . '/' . \Less_Cache::Get(
-                array(Director::getAbsFile($less_file) => $less_base),
+                [Director::getAbsFile($less_file) => $less_base],
                 $options,
                 $variables
             );
@@ -187,7 +196,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
         $parsed_file = Director::makeRelative($output_file);
 
-        self::$processed_files[$file] = $parsed_file;
+        self::$processed_files[$file]        = $parsed_file;
         self::$processed_files[$parsed_file] = $parsed_file;
 
         return $parsed_file;
