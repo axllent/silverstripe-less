@@ -43,6 +43,13 @@ class LessCompiler extends Requirements_Backend implements Flushable
     private static $already_flushed = false;
 
     /**
+     * Folder name for processed css under `assets`
+     *
+     * @var string
+     */
+    private static $processed_folder = '_css';
+
+    /**
      * @var array
      */
     private static $processed_files = [];
@@ -157,7 +164,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
             str_replace('/', '-', preg_replace('/\.less$/i', '', $less_file))
         ) . '.css';
 
-        $css_file = $this->getCombinedFilesFolder() . '/' . $url_friendly_css_name;
+        $css_file = self::getProcessedCSSFolder() . '/' . $url_friendly_css_name;
 
         $output_file = $this->asset_handler->getContentURL($css_file);
 
@@ -200,5 +207,18 @@ class LessCompiler extends Requirements_Backend implements Flushable
         self::$processed_files[$parsed_file] = $parsed_file;
 
         return $parsed_file;
+    }
+
+    /**
+     * Return the processed CSS folder name
+     *
+     * @return string
+     */
+    public static function getProcessedCSSFolder()
+    {
+        return Config::inst()->get(
+            __CLASS__,
+            'processed_folder'
+        );
     }
 }

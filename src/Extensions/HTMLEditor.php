@@ -1,6 +1,7 @@
 <?php
 namespace Axllent\Less\Extensions;
 
+use Axllent\Less\LessCompiler;
 use FilesystemIterator;
 use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Control\Director;
@@ -12,11 +13,14 @@ use SilverStripe\View\Requirements;
  */
 class HTMLEditor extends LeftAndMainExtension
 {
+    /**
+     * @return null
+     */
     public function onBeforeInit()
     {
         $asset_handler = Requirements::backend()->getAssetHandler();
 
-        $combined_folder = Requirements::backend()->getCombinedFilesFolder();
+        $combined_folder = LessCompiler::getProcessedCSSFolder();
 
         $folder = $asset_handler->getContentURL($combined_folder);
 
