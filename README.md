@@ -6,7 +6,7 @@ A wrapper for [less.php](https://github.com/Asenar/less.php) to integrate [LESS]
 
 - Integrates a fork of [less.php](https://github.com/Asenar/less.php) seemessly into SilverStripe
 - Includes flushing option (`?flush`) to regenerate CSS stylesheets (ie. force undetected less changes with @import)
-- Writes processed *.css files into `assets/_combinedfiles` and automatically modifies `Requirements` paths
+- Writes processed *.css files into `assets/_css` and automatically modifies `Requirements` paths
 - Allows custom global variables to be passed through to less compiling (yaml configuration)
 - Automatic image & @import URL translation (eg: `url('../image.png')` will get rewritten as `url('/path/to/image.png')` depending on your website's root folder)
 - Automatic compression of CSS files when in `Live` mode (may require an initial `?flush`)
@@ -45,11 +45,11 @@ class PageController extends ContentController
 }
 ```
 
-The generated HTML will point automatically to the **processed** CSS file in `assets/_combinedfiles`
+The generated HTML will point automatically to the **processed** CSS file in `assets/_css`
 rather than the original less file location, for example
 
 ```
-<link rel="stylesheet" type="text/css"  href="/assets/_combinedfiles/themes-site-css-stylesheet.css?m=123456789" />
+<link rel="stylesheet" type="text/css"  href="/assets/_css/themes-site-css-stylesheet.css?m=123456789" />
 ```
 
 ## Further documentation
