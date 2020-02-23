@@ -2,6 +2,12 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.3.0]
+
+- Switch to using separate `$processed_folder` (default `_css`) due to upstream changes in `/dev/build` always emptying `_combinedfiles` causing issues with errorpage regeneration
+- Remove (now) redundant ErrorPageController extension
+
+
 ## [2.2.0]
 
 - Add third `$options` arg to `css()` for SS 4.5.0 compatibility
@@ -54,7 +60,7 @@ Notable changes to this project will be documented in this file.
 ## [2.0.0]
 
 - Support for SilverStripe 4 (namespacing)
-- Generate CSS files in `assets/_combinedfiles` rather than *.less folder
+- Generate CSS files in `assets/_css` rather than *.less folder
 - Switch to YAML config
 - Switch requirement to [asenar/less.php](https://github.com/Asenar/less.php) fork as
 the original [less.php](http://lessphp.gpeasy.com/) isn't being maintained any more.
