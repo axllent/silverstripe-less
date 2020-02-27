@@ -40,7 +40,7 @@ class PageController extends ContentController
     public function init()
     {
         parent::init();
-        Requirements:css('themes/site/css/stylesheet.less');
+        Requirements:css('resources/themes/site/css/stylesheet.less');
     }
 }
 ```

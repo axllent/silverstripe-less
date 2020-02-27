@@ -4,7 +4,7 @@ SilverStripe-less is a plug-and-play module, meaning there is little you need to
 
 Once you have [installed][Installation.md] the module, simply use `Requirements` as you normally would, except using the *.less names of your files.
 
-For instance if you have a `themes/site/css/stylesheet.less` file you wish to add, in your PageController you would have
+For instance if you have a `resources/themes/site/css/stylesheet.less` file you wish to add, in your PageController you would have
 ```php
 <?php
 use SilverStripe\CMS\Controllers\ContentController;
@@ -15,7 +15,7 @@ class PageController extends ContentController
     public function init()
     {
         parent::init();
-        Requirements:css('themes/site/css/stylesheet.less');
+        Requirements:css('resources/themes/site/css/stylesheet.less');
     }
 }
 ```
@@ -36,8 +36,8 @@ class PageController extends ContentController
     {
         parent::init();
         Requirements::combine_files('combined.css', [
-            'themes/site/css/stylesheet.less',
-            'themes/site/css/colours.less'
+            'resources/themes/site/css/stylesheet.less',
+            'resources/themes/site/css/colours.less'
         ]);
         Requirements::process_combined_files();
     }
