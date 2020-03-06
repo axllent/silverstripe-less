@@ -2,6 +2,11 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.3.1]
+
+- New flush method to remove compiled files
+
+
 ## [2.3.0]
 
 - Switch to using separate `$processed_folder` (default `_css`) due to upstream changes in `/dev/build` always emptying `_combinedfiles` causing issues with errorpage regeneration
