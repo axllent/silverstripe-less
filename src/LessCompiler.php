@@ -28,19 +28,25 @@ class LessCompiler extends Requirements_Backend implements Flushable
 {
 
     /**
+     * Less cache method
+     *
      * @config
      */
     private static $cache_method = 'serialize';
 
     /**
-     * @config
+     * Less variables
+     *
+     * @array
      */
     private static $variables = [];
 
     /**
-     * @var mixed
+     * Already flushed
+     *
+     * @var array
      */
-    private static $already_flushed = false;
+    private static $_already_flushed = false;
 
     /**
      * Folder name for processed css under `assets`
@@ -50,10 +56,17 @@ class LessCompiler extends Requirements_Backend implements Flushable
     private static $processed_folder = '_css';
 
     /**
+     * Processed files
+     *
      * @var array
      */
     private static $processed_files = [];
 
+    /**
+     * Construtor
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->config = Config::inst();
@@ -67,10 +80,10 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
     /**
      * Return cache directory
-     * @param Null
-     * @return String
+     *
+     * @return string
      */
-    private static function getCacheDir()
+    private static function _getCacheDir()
     {
         return TEMP_FOLDER . '/less-cache';
     }
@@ -88,19 +101,33 @@ class LessCompiler extends Requirements_Backend implements Flushable
     /**
      * Triggered early in the request when a flush is requested
      * Deletes the less.php cache folder and regenerates
+     *
+     * @return void
      */
     public static function flush()
     {
-        if (!self::$already_flushed && file_exists(self::getCacheDir())) {
-            $paths = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator(self::getCacheDir(), FilesystemIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::CHILD_FIRST
-            );
-            foreach ($paths as $path) {
-                $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+        $css_dir = self::getProcessedCSSFolder();
+
+        if (!self::$_already_flushed && $css_dir != '') {
+            // remove /public/assets/_css
+            $ah = Injector::inst()->get(GeneratedAssetHandler::class);
+            $ah->removeContent($css_dir);
+
+            // remove /tmp build dir
+            if (file_exists(self::_getCacheDir())) {
+                $paths = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator(
+                        self::_getCacheDir(),
+                        FilesystemIterator::SKIP_DOTS
+                    ),
+                    RecursiveIteratorIterator::CHILD_FIRST
+                );
+                foreach ($paths as $path) {
+                    $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+                }
             }
             // make sure we only flush once per request and not for each *.less
-            self::$already_flushed = true;
+            self::$_already_flushed = true;
         }
     }
 
@@ -123,7 +150,13 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
     /**
      * Process any less files and return new filenames
-     * @See Requirements_Backend->combineFiles() for options
+     * See Requirements_Backend->combineFiles() for options
+     *
+     * @param string $combinedFileName combined name
+     * @param array  $files            files
+     * @param array  $options          options
+     *
+     * @return string
      */
     public function combineFiles($combinedFileName, $files, $options = [])
     {
@@ -138,8 +171,10 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
     /**
      * Process less file (if detected) and return new URL
-     * @param String (original)
-     * @return String (new filename)
+     *
+     * @param string $file Original file
+     *
+     * @return string New file
      */
     public function processLessFile($file)
     {
@@ -158,7 +193,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
             return $file;
         }
 
-        // Generate a new CSS filename that includes the original path to avoid naming conflicts.
+        // Generate new CSS filename including original path to avoid conflicts.
         // eg: themes/site/css/file.less becomes themes-site-css-file.css
         $url_friendly_css_name = $this->file_name_filter->filter(
             str_replace('/', '-', preg_replace('/\.less$/i', '', $less_file))
@@ -168,8 +203,8 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
         $output_file = $this->asset_handler->getContentURL($css_file);
 
-        if (is_null($output_file) || $this->is_dev) {
-            $cache_dir = self::getCacheDir();
+        if (is_null($output_file) || $this->is_dev || isset($_GET['flushstyles'])) {
+            $cache_dir = self::_getCacheDir();
 
             // relative links in css
             $less_base = dirname(Director::baseURL() . $less_file) . '/';
