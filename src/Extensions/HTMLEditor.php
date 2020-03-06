@@ -14,7 +14,9 @@ use SilverStripe\View\Requirements;
 class HTMLEditor extends LeftAndMainExtension
 {
     /**
-     * @return null
+     * On before init
+     *
+     * @return void
      */
     public function onBeforeInit()
     {
@@ -28,7 +30,9 @@ class HTMLEditor extends LeftAndMainExtension
             return;
         }
 
-        $files = new FilesystemIterator(Director::getAbsFile(Director::makeRelative($folder)));
+        $files = new FilesystemIterator(
+            Director::getAbsFile(Director::makeRelative($folder))
+        );
 
         $editor_css = [];
 
@@ -43,6 +47,10 @@ class HTMLEditor extends LeftAndMainExtension
             return; // no *-editor.css found
         }
 
-        Config::modify()->merge('SilverStripe\\Forms\\HTMLEditor\\TinyMCEConfig', 'editor_css', $editor_css);
+        Config::modify()->merge(
+            'SilverStripe\\Forms\\HTMLEditor\\TinyMCEConfig',
+            'editor_css',
+            $editor_css
+        );
     }
 }
