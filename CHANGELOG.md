@@ -2,6 +2,11 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.4.0]
+
+- Switch from abandoned `asenar/less.php` to `wikimedia/less.php`
+
+
 ## [2.3.1]
 
 - New flush method to remove compiled files
