@@ -2,6 +2,11 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.5.0]
+
+- Support for Silverstripe 5
+
+
 ## [2.4.0]
 
 - Switch from abandoned `asenar/less.php` to `wikimedia/less.php`
