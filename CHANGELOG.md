@@ -2,6 +2,11 @@
 
 Notable changes to this project will be documented in this file.
 
+## [2.5.1]
+
+- Bump `wikimedia/less.php` to ^4.1
+
+
 ## [2.5.0]
 
 - Support for Silverstripe 5
