@@ -1,10 +1,11 @@
-# Less.php module for SilverStripe
+# Less.php module for Silverstripe
 
-A wrapper for [less.php](https://github.com/Asenar/less.php) to integrate [LESS](http://lesscss.org/) into SilverStripe.
+A wrapper for [less.php](https://github.com/wikimedia/less.php) to integrate [LESS](http://lesscss.org/) into Silverstripe.
+
 
 ## Features
 
-- Integrates a fork of [less.php](https://github.com/Asenar/less.php) seemessly into SilverStripe
+- Integrates a fork of [less.php](hhttps://github.com/wikimedia/less.php) seamlessly into Silverstripe
 - Includes flushing option (`?flush`) to regenerate CSS stylesheets (ie. force undetected less changes with @import)
 - Writes processed *.css files into `assets/_css` and automatically modifies `Requirements` paths
 - Allows custom global variables to be passed through to less compiling (yaml configuration)
@@ -12,11 +13,13 @@ A wrapper for [less.php](https://github.com/Asenar/less.php) to integrate [LESS]
 - Automatic compression of CSS files when in `Live` mode (may require an initial `?flush`)
 - Adds any processed editor.less files to TinyMCE (must be included in your front-end template)
 
+
 ## Requirements
 
-- SilverStripe 4
+- Silverstripe ^4 || ^5
 
-For SilverStripe 3, please refer to the [SilverStripe3 branch](https://github.com/axllent/silverstripe-less/tree/silverstripe3).
+For Silverstripe 3, please refer to the [Silverstripe3 branch](https://github.com/axllent/silverstripe-less/tree/silverstripe3).
+
 
 ## Installation
 

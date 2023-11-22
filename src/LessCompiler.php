@@ -1,15 +1,14 @@
 <?php
+
 namespace Axllent\Less;
 
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\View\Requirements_Backend;
 
 /**
@@ -23,10 +22,8 @@ use SilverStripe\View\Requirements_Backend;
  * License: MIT-style license http://opensource.org/licenses/MIT
  * Authors: Techno Joy development team (www.technojoy.co.nz)
  */
-
 class LessCompiler extends Requirements_Backend implements Flushable
 {
-
     /**
      * Less cache method
      *
@@ -63,7 +60,15 @@ class LessCompiler extends Requirements_Backend implements Flushable
     private static $processed_files = [];
 
     /**
-     * Construtor
+     * Other various cached values
+     */
+    private $config;
+    private $asset_handler;
+    private $file_name_filter;
+    private $is_dev;
+
+    /**
+     * Constructor
      *
      * @return void
      */
@@ -108,19 +113,19 @@ class LessCompiler extends Requirements_Backend implements Flushable
     {
         $css_dir = self::getProcessedCSSFolder();
 
-        if (!self::$_already_flushed && $css_dir != '') {
+        if (!self::$_already_flushed && '' != $css_dir) {
             // remove /public/assets/_css
             $ah = Injector::inst()->get(GeneratedAssetHandler::class);
             $ah->removeContent($css_dir);
 
             // remove /tmp build dir
             if (file_exists(self::_getCacheDir())) {
-                $paths = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator(
+                $paths = new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator(
                         self::_getCacheDir(),
-                        FilesystemIterator::SKIP_DOTS
+                        \FilesystemIterator::SKIP_DOTS
                     ),
-                    RecursiveIteratorIterator::CHILD_FIRST
+                    \RecursiveIteratorIterator::CHILD_FIRST
                 );
                 foreach ($paths as $path) {
                     $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
@@ -137,12 +142,13 @@ class LessCompiler extends Requirements_Backend implements Flushable
      *
      * @param string $file    The CSS file to load, relative to site root
      * @param string $media   Media types (e.g. 'screen,projector')
-     * @param array  $options List of options.
+     * @param array  $options list of options
      *
      * @return void
      */
     public function css($file, $media = null, $options = [])
     {
+        $file     = ModuleResourceLoader::singleton()->resolvePath($file);
         $css_file = $this->processLessFile($file);
 
         return parent::css($css_file, $media, $options);
@@ -180,7 +186,8 @@ class LessCompiler extends Requirements_Backend implements Flushable
     {
         if (!preg_match('/\.less$/', $file)) { // Not a less file
             return $file;
-        } elseif (!empty(self::$processed_files[$file])) { // already processed
+        }
+        if (!empty(self::$processed_files[$file])) { // already processed
             return self::$processed_files[$file];
         }
 

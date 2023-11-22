@@ -1,8 +1,8 @@
 <?php
+
 namespace Axllent\Less\Extensions;
 
 use Axllent\Less\LessCompiler;
-use FilesystemIterator;
 use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -30,7 +30,7 @@ class HTMLEditor extends LeftAndMainExtension
             return;
         }
 
-        $files = new FilesystemIterator(
+        $files = new \FilesystemIterator(
             Director::getAbsFile(Director::makeRelative($folder))
         );
 
