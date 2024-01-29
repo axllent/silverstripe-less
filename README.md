@@ -9,21 +9,18 @@ A wrapper for [less.php](https://github.com/wikimedia/less.php) to integrate [LE
 - Includes flushing option (`?flush`) to regenerate CSS stylesheets (ie. force undetected less changes with @import)
 - Writes processed *.css files into `assets/_css` and automatically modifies `Requirements` paths
 - Allows custom global variables to be passed through to less compiling (yaml configuration)
-- Automatic image & @import URL translation (eg: `url('../image.png')` will get rewritten as `url('/path/to/image.png')` depending on your website's root folder)
-- Automatic compression of CSS files when in `Live` mode (may require an initial `?flush`)
+- Automatic compression of CSS files when in `live` mode (may require an initial `?flush`)
 - Adds any processed editor.less files to TinyMCE (must be included in your front-end template)
 
 
 ## Requirements
 
-- Silverstripe ^4 || ^5
-
-For Silverstripe 3, please refer to the [Silverstripe3 branch](https://github.com/axllent/silverstripe-less/tree/silverstripe3).
+- Silverstripe ^5
 
 
 ## Installation
 
-```
+```shell
 composer require axllent/silverstripe-less
 ```
 
@@ -31,8 +28,15 @@ composer require axllent/silverstripe-less
 
 You need refer to your less files by their full LESS filenames (eg:`stylesheet.less`).
 
+Note: The `less.php` compiler transforms relative paths like `url('../images/logo.png')` into `url('/themes/site/images/logo.png')` based on the path provided as you included the files, meaning these won't work in Silverstripe due to the exposed directory structure via (`_resources/...`). The two simplest solutions are:
+
+1. Use a variable in your less files to provide the path to your files (ie: do not use relative paths), or:
+2. Include your files using "_resources" in the path to your less file, eg: `Requirements:css('_resources/themes/site/css/stylesheet.less');`
+
+
 ## Example
 
+In your page controller:
 ```php
 <?php
 use SilverStripe\CMS\Controllers\ContentController;
@@ -43,9 +47,15 @@ class PageController extends ContentController
     public function init()
     {
         parent::init();
-        Requirements:css('resources/themes/site/css/stylesheet.less');
+        Requirements:css('themes/site/css/stylesheet.less');
     }
 }
+```
+
+Or via template
+
+```html
+<% require themedCSS("layout.less") %>
 ```
 
 The generated HTML will point automatically to the **processed** CSS file in `assets/_css`
