@@ -2,6 +2,13 @@
 
 Notable changes to this project will be documented in this file.
 
+## [3.0.0]
+
+- Drop support for Silverstripe 4
+- Integration with axllent/silverstripe-minify
+
+
+
 ## [2.5.1]
 
 - Bump `wikimedia/less.php` to ^4.1
