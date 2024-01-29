@@ -1,6 +1,6 @@
 {
     "name": "axllent/silverstripe-less",
-    "description": "Wrapper for less.php to integrate LESS into SilverStripe",
+    "description": "Wrapper for less.php to integrate LESS into Silverstripe",
     "type": "silverstripe-vendormodule",
     "homepage": "https://github.com/axllent/silverstripe-less",
     "keywords": [
@@ -21,6 +21,7 @@
         "issues": "https://github.com/axllent/silverstripe-less/issues"
     },
     "require": {
+        "axllent/silverstripe-minify": "^1.0",
         "silverstripe/framework": "^4.5 || ^5.0",
         "wikimedia/less.php": "^4.1"
     },

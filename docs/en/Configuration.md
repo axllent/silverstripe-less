@@ -2,21 +2,14 @@
 
 SilverStripe-less doesn't have many configuration options at this time.
 The two options it does have are configured using your
-own YAML config file (for instance `mysite/_config/less.yml`).
+own YAML config file (eg: `app/_config/less.yml`).
 
-```
+```yaml
 Axllent\Less\LessCompiler:
-  cache_method: 'serialize'   # (serialize / php)
   variables:
-    'HeaderFont': 'Arial, sans-serif, "Times New Roman"' # note the quotes, see below!
-    'HeaderFontSize': '18px'
+    HeaderFont: 'Arial, sans-serif, "Times New Roman"' # note the quotes, see below!
+    HeaderFontSize: 18px
 ```
-
-## Setting cache_method
-
-Only two caching methods are supported, `serialize` and `php`
-(see [documentation](https://github.com/Asenar/less.php#caching)).
-
 
 ## Variables
 
@@ -32,4 +25,4 @@ header h1 {
 
 ## Editor CSS
 
-The less compiler will automatically add any editor.less file (used on the front-end) to TinyMCE.
+The module will automatically add any editor.css file (used on the front-end) to TinyMCE provided it is compiled as an individual file (ie: exists in your `assets/_css/*-editor.css`).

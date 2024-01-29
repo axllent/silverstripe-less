@@ -2,8 +2,6 @@
 
 To install it in your project:
 
-```
+```shell
 composer require axllent/silverstripe-less
 ```
-
-It will also install the necessary requirement (asenar/less.php) for Less parsing.

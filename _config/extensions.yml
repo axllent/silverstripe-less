@@ -1,9 +1,9 @@
 ---
 Name: lesscompiler
 ---
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\View\Requirements_Backend:
-    class: Axllent\Less\LessCompiler
+Axllent\Minify\Minifier:
+  compilers:
+    less: Axllent\Less\LessCompiler
 
 SilverStripe\Admin\LeftAndMain:
   extensions:

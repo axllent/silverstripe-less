@@ -26,7 +26,7 @@ class HTMLEditor extends LeftAndMainExtension
 
         $folder = $asset_handler->getContentURL($combined_folder);
 
-        if (!$folder) { // _combinedfiles doesn't exist
+        if (!$folder) { // _combined files doesn't exist
             return;
         }
 

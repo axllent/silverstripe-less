@@ -9,7 +9,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
-use SilverStripe\View\Requirements_Backend;
 
 /**
  * LESS.php CSS compiler for SilverStripe
@@ -22,15 +21,8 @@ use SilverStripe\View\Requirements_Backend;
  * License: MIT-style license http://opensource.org/licenses/MIT
  * Authors: Techno Joy development team (www.technojoy.co.nz)
  */
-class LessCompiler extends Requirements_Backend implements Flushable
+class LessCompiler implements Flushable
 {
-    /**
-     * Less cache method
-     *
-     * @config
-     */
-    private static $cache_method = 'serialize';
-
     /**
      * Less variables
      *
@@ -43,7 +35,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
      *
      * @var array
      */
-    private static $_already_flushed = false;
+    private static $already_flushed = false;
 
     /**
      * Folder name for processed css under `assets`
@@ -85,20 +77,16 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
     /**
      * Return cache directory
-     *
-     * @return string
      */
-    private static function _getCacheDir()
+    private static function _getCacheDir(): string
     {
         return TEMP_FOLDER . '/less-cache';
     }
 
     /**
      * Gets the default backend storage for generated files
-     *
-     * @return GeneratedAssetHandler
      */
-    public function getAssetHandler()
+    public function getAssetHandler(): GeneratedAssetHandler
     {
         return Injector::inst()->get(GeneratedAssetHandler::class);
     }
@@ -113,7 +101,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
     {
         $css_dir = self::getProcessedCSSFolder();
 
-        if (!self::$_already_flushed && '' != $css_dir) {
+        if (!self::$already_flushed && '' != $css_dir) {
             // remove /public/assets/_css
             $ah = Injector::inst()->get(GeneratedAssetHandler::class);
             $ah->removeContent($css_dir);
@@ -132,7 +120,7 @@ class LessCompiler extends Requirements_Backend implements Flushable
                 }
             }
             // make sure we only flush once per request and not for each *.less
-            self::$_already_flushed = true;
+            self::$already_flushed = true;
         }
     }
 
@@ -146,43 +134,19 @@ class LessCompiler extends Requirements_Backend implements Flushable
      *
      * @return void
      */
-    public function css($file, $media = null, $options = [])
+    public function process($file, $media = null, $options = []): string
     {
-        $file     = ModuleResourceLoader::singleton()->resolvePath($file);
-        $css_file = $this->processLessFile($file);
+        $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
-        return parent::css($css_file, $media, $options);
-    }
-
-    /**
-     * Process any less files and return new filenames
-     * See Requirements_Backend->combineFiles() for options
-     *
-     * @param string $combinedFileName combined name
-     * @param array  $files            files
-     * @param array  $options          options
-     *
-     * @return string
-     */
-    public function combineFiles($combinedFileName, $files, $options = [])
-    {
-        $new_files = [];
-
-        foreach ($files as $file) {
-            $new_files[] = $this->processLessFile($file);
-        }
-
-        return parent::combineFiles($combinedFileName, $new_files, $options);
+        return $this->processLessFile($file);
     }
 
     /**
      * Process less file (if detected) and return new URL
      *
      * @param string $file Original file
-     *
-     * @return string New file
      */
-    public function processLessFile($file)
+    public function processLessFile($file): string
     {
         if (!preg_match('/\.less$/', $file)) { // Not a less file
             return $file;
@@ -216,13 +180,9 @@ class LessCompiler extends Requirements_Backend implements Flushable
             // relative links in css
             $less_base = dirname(Director::baseURL() . $less_file) . '/';
 
-            // Set less options
-            $cache_method = $this->config->get('Axllent\\Less\\LessCompiler', 'cache_method');
-
             $options = [
-                'cache_dir'    => $cache_dir,
-                'cache_method' => $cache_method,
-                'compress'     => Director::isLive(), // compress CSS if live
+                'cache_dir' => $cache_dir,
+                'compress'  => Director::isLive(), // compress CSS if live
             ];
 
             $current_raw_css = $this->asset_handler->getContent($css_file);
@@ -253,10 +213,8 @@ class LessCompiler extends Requirements_Backend implements Flushable
 
     /**
      * Return the processed CSS folder name
-     *
-     * @return string
      */
-    public static function getProcessedCSSFolder()
+    public static function getProcessedCSSFolder(): string
     {
         return Config::inst()->get(
             __CLASS__,
