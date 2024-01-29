@@ -1,7 +1,7 @@
 ---
 Name: lesscompiler
 ---
-Axllent\Minify\Minifier:
+Axllent\minifier\Minifier:
   compilers:
     less: Axllent\Less\LessCompiler
 

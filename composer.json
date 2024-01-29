@@ -21,7 +21,7 @@
         "issues": "https://github.com/axllent/silverstripe-less/issues"
     },
     "require": {
-        "axllent/silverstripe-minify": "^1.0",
+        "axllent/silverstripe-minifier": "^2.0",
         "silverstripe/framework": "^5.0",
         "wikimedia/less.php": "^4.1"
     },

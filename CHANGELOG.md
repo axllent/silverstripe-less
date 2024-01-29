@@ -5,7 +5,7 @@ Notable changes to this project will be documented in this file.
 ## [3.0.0]
 
 - Drop support for Silverstripe 4
-- Integration with axllent/silverstripe-minify
+- Integration with axllent/silverstripe-minifier
 
 
 
