@@ -2,11 +2,15 @@
 
 Notable changes to this project will be documented in this file.
 
+## [3.0.1]
+
+- Remove redundant conflict with axllent/silverstripe-scss
+
+
 ## [3.0.0]
 
 - Drop support for Silverstripe 4
 - Integration with axllent/silverstripe-minifier
-
 
 
 ## [2.5.1]
