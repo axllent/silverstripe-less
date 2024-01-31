@@ -25,9 +25,6 @@
         "silverstripe/framework": "^5.0",
         "wikimedia/less.php": "^4.1"
     },
-    "conflict": {
-        "axllent/silverstripe-scss": "*"
-    },
     "autoload": {
         "psr-4": {
             "Axllent\\Less\\": "src/"
