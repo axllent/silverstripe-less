@@ -2,9 +2,10 @@
 
 Silverstripe-less is a plug-and-play module, meaning there is little you need to do.
 
-Once you have [installed][Installation.md] the module, simply use `Requirements` as you normally would, except using the *.less names of your files.
+Once you have [installed][Installation.md] the module, simply use `Requirements` as you normally would, except using the \*.less names of your files.
 
 For instance if you have a `themes/site/css/stylesheet.less` file you wish to add, in your PageController you would have
+
 ```php
 <?php
 use SilverStripe\CMS\Controllers\ContentController;
@@ -19,20 +20,17 @@ class PageController extends ContentController
         // OR
         Requirements::themedCSS('css/stylesheet.less');
         // OR
-        Requirements::themedCSS('css/stylesheet');
-        // OR
         Requirements::themedCSS('stylesheet.less');
-        // OR
-        Requirements::themedCSS('stylesheet');
     }
 }
 ```
 
 The library supports `themedCSS()` file resolving mechanism. The following 3 lines are equivalent:
+
 ```php
 Requirements::css('themes/site/css/stylesheet.less');
 Requirements::themedCSS('css/stylesheet.less');
-Requirements::themedCSS('stylesheet');
+Requirements::themedCSS('stylesheet.less');
 ```
 
 This will parse the less file (if needed), and write the resulting CSS file to `assets/_css/themes-site-css-stylesheet.css`
@@ -57,11 +55,9 @@ class PageController extends ContentController
                 'themes/site/css/stylesheet.less'
             ]
         );
-        Requirements::process_combined_files();
     }
 }
 ```
-
 
 You can also include less stylesheets from within your templates:
 
@@ -71,8 +67,6 @@ You can also include less stylesheets from within your templates:
 <% require themedCSS(css/stylesheet.less) %>
 <!-- OR -->
 <% require themedCSS(stylesheet.less) %>
-<!-- OR -->
-<% require themedCSS(stylesheet) %>
 ```
 
 ## Using custom variables
