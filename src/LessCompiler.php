@@ -80,7 +80,7 @@ class LessCompiler implements Flushable
      */
     private static function _getCacheDir(): string
     {
-        return TEMP_FOLDER . '/less-cache';
+        return TEMP_PATH . '/less-cache';
     }
 
     /**
@@ -101,7 +101,7 @@ class LessCompiler implements Flushable
     {
         $css_dir = self::getProcessedCSSFolder();
 
-        if (!self::$already_flushed && '' != $css_dir) {
+        if (!self::$already_flushed && $css_dir != '') {
             // remove /public/assets/_css
             $ah = Injector::inst()->get(GeneratedAssetHandler::class);
             $ah->removeContent($css_dir);
@@ -188,7 +188,7 @@ class LessCompiler implements Flushable
             $current_raw_css = $this->asset_handler->getContent($css_file);
 
             // Generate and return compiled/cached file path
-            $variables = $this->config->get('Axllent\\Less\\LessCompiler', 'variables');
+            $variables = $this->config->get('Axllent\Less\LessCompiler', 'variables');
 
             $cached_file = $cache_dir . '/' . \Less_Cache::Get(
                 [Director::getAbsFile($less_file) => $less_base],

@@ -3,18 +3,18 @@
 namespace Axllent\Less\Extensions;
 
 use Axllent\Less\LessCompiler;
-use SilverStripe\Admin\LeftAndMainExtension;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
 use SilverStripe\View\Requirements;
 
 /**
- * Add any rendered editor.less to TinyMCE
+ * Add any rendered editor.scss to TinyMCE
  */
-class HTMLEditor extends LeftAndMainExtension
+class HTMLEditor extends Extension
 {
     /**
-     * On before init
+     * OnBeforeInit
      *
      * @return void
      */
@@ -26,7 +26,7 @@ class HTMLEditor extends LeftAndMainExtension
 
         $folder = $asset_handler->getContentURL($combined_folder);
 
-        if (!$folder) { // _combined files doesn't exist
+        if (!$folder) {
             return;
         }
 
@@ -47,8 +47,16 @@ class HTMLEditor extends LeftAndMainExtension
             return; // no *-editor.css found
         }
 
+        // Silverstripe 4 & 5
         Config::modify()->merge(
-            'SilverStripe\\Forms\\HTMLEditor\\TinyMCEConfig',
+            'SilverStripe\Forms\HTMLEditor\TinyMCEConfig',
+            'editor_css',
+            $editor_css
+        );
+
+        // Silverstripe 6
+        Config::modify()->merge(
+            'SilverStripe\TinyMCE\TinyMCEConfig',
             'editor_css',
             $editor_css
         );

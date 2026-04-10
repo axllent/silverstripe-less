@@ -22,8 +22,8 @@
     },
     "require": {
         "axllent/silverstripe-minifier": "^2.0",
-        "silverstripe/framework": "^5.0",
-        "wikimedia/less.php": "^4.1"
+        "silverstripe/framework": "^5.0 || ^6.0",
+        "wikimedia/less.php": "^5.5"
     },
     "autoload": {
         "psr-4": {
